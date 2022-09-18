@@ -15,6 +15,13 @@ public struct Translator {
         self.region = region
     }
 
+    public func languages() async throws -> Languages {
+        let url = try makeURL(path: "/languages")
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        return try await decodedData(for: request)
+    }
+
     private func makeURL(path: String, query: [(String, String)] = []) throws -> URL {
         var components = URLComponents()
         components.scheme = "https"
