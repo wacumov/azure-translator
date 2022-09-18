@@ -22,6 +22,22 @@ public struct Translator {
         return try await decodedData(for: request)
     }
 
+    public func translate(_ texts: [String], from sourceLanguage: String, to targetLanguages: [String]) async throws -> [Translations] {
+        let url = try makeURL(
+            path: "/translate",
+            query: [
+                ("from", sourceLanguage),
+            ] + targetLanguages.map {
+                ("to", $0)
+            }
+        )
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        setHeaders(&request)
+        try setHTTPBody(&request, texts)
+        return try await decodedData(for: request)
+    }
+
     private func makeURL(path: String, query: [(String, String)] = []) throws -> URL {
         var components = URLComponents()
         components.scheme = "https"
