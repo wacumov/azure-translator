@@ -1,3 +1,4 @@
+
 import Foundation
 #if canImport(FoundationNetworking)
     import FoundationNetworking
@@ -35,6 +36,21 @@ public struct Translator {
         request.httpMethod = "POST"
         setHeaders(&request)
         try setHTTPBody(&request, texts)
+        return try await decodedData(for: request)
+    }
+
+    public func dictionaryLookup(_ terms: [String], from sourceLanguage: String, to targetLanguage: String) async throws -> [DictionaryLookup] {
+        let url = try makeURL(
+            path: "/dictionary/lookup",
+            query: [
+                ("from", sourceLanguage),
+                ("to", targetLanguage),
+            ]
+        )
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        setHeaders(&request)
+        try setHTTPBody(&request, terms)
         return try await decodedData(for: request)
     }
 
